@@ -18,16 +18,20 @@ export enum FormFieldTypes {
 }
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  email: z.string(),
+  phone: z.string(),
 });
 
 const PatientForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
@@ -60,6 +64,14 @@ const PatientForm = () => {
           placeholder="johndoe@example.com"
           iconSrc="/assets/icons/email.svg"
           iconAlt="email"
+        />
+
+        <CustomFormField
+          control={form.control}
+          fieldType={FormFieldTypes.PHONE_INPUT}
+          name="phone"
+          label="Phone Number"
+          placeholder="(555) 123-4567"
         />
 
         <Button type="submit">Get Started</Button>
