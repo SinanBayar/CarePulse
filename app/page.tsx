@@ -1,3 +1,4 @@
+import PatientForm from "@/components/PatientForm";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,7 +15,7 @@ export default function Home() {
             height={1000}
             className="mb-12 h-10 w-fit"
           />
-          {/* //TODO: Patient Form */}
+          <PatientForm />
           <div className="text-14-regular mt-20 flex justify-between">
             <p className="justify-items text-dark-600 xl:text-left">
               © {new Date().getFullYear()} CarePulse
