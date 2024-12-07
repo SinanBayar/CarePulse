@@ -4,16 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import CustomFormField from "./CustomFormField";
+
+export enum FormFieldTypes {
+  INPUT = "input",
+  TEXTAREA = "tesxtarea",
+  PHONE_INPUT = "phoneInput",
+  CHECKBOX = "checkbox",
+  DATE_PICKER = "datePicker",
+  SELECT = "select",
+  SKELETON = "skeleton",
+}
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -39,22 +41,27 @@ const PatientForm = () => {
           <h1 className="header">Hi there 👋</h1>
           <p className="text-dark-700">Schedule your first appoitment </p>
         </section>
-        <FormField
+
+        <CustomFormField
           control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          fieldType={FormFieldTypes.INPUT}
+          name="name"
+          label="Full Name"
+          placeholder="John Doe"
+          iconSrc="/assets/icons/user.svg"
+          iconAlt="user"
         />
+
+        <CustomFormField
+          control={form.control}
+          fieldType={FormFieldTypes.INPUT}
+          name="email"
+          label="Email"
+          placeholder="johndoe@example.com"
+          iconSrc="/assets/icons/email.svg"
+          iconAlt="email"
+        />
+
         <Button type="submit">Get Started</Button>
       </form>
     </Form>
