@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { UserFromValidation } from "@/lib/validation";
 import CustomFormField from "./CustomFormField";
+import SubmitButton from "./SubmitButton";
 
 export enum FormFieldTypes {
   INPUT = "input",
@@ -17,25 +19,20 @@ export enum FormFieldTypes {
   SKELETON = "skeleton",
 }
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string(),
-  phone: z.string(),
-});
-
 const PatientForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof UserFromValidation>>({
+    resolver: zodResolver(UserFromValidation),
     defaultValues: {
-      name: "",
+      username: "",
       email: "",
       phone: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof UserFromValidation>) {
+    setIsLoading(true);
     console.log(values);
   }
   return (
@@ -49,7 +46,7 @@ const PatientForm = () => {
         <CustomFormField
           control={form.control}
           fieldType={FormFieldTypes.INPUT}
-          name="name"
+          name="username"
           label="Full Name"
           placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"
@@ -74,7 +71,7 @@ const PatientForm = () => {
           placeholder="(555) 123-4567"
         />
 
-        <Button type="submit">Get Started</Button>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
