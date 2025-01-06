@@ -8,10 +8,12 @@ import { Form } from "@/components/ui/form";
 import { UserFromValidation } from "@/lib/validation";
 import CustomFormField from "./CustomFormField";
 import SubmitButton from "./SubmitButton";
+import { createUser } from "@/lib/actions/patient.actions";
+import { useRouter } from "next/navigation";
 
 export enum FormFieldTypes {
   INPUT = "input",
-  TEXTAREA = "tesxtarea",
+  TEXTAREA = "textarea",
   PHONE_INPUT = "phoneInput",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
@@ -20,6 +22,7 @@ export enum FormFieldTypes {
 }
 
 const PatientForm = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof UserFromValidation>>({
@@ -31,9 +34,24 @@ const PatientForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof UserFromValidation>) {
+  async function onSubmit({
+    username,
+    email,
+    phone,
+  }: z.infer<typeof UserFromValidation>) {
     setIsLoading(true);
-    console.log(values);
+
+    try {
+      const userData = { username, email, phone };
+      const user = await createUser(userData);
+      if (user) {
+        router.push(`/patients/${user.$id}/register`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    
+    setIsLoading(false);
   }
   return (
     <Form {...form}>
